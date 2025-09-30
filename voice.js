@@ -214,9 +214,8 @@ async function startCall() {
         document.addEventListener('keydown', handleEscapeKey);
 
         updateStatus('voice.status-calling', 'fa-phone-volume');
-
-        const ringtoneUrl = new URL('./assets/audio/lofi-5s.mp3', document.baseURI).href;
-        ringtone = new Audio(ringtoneUrl);
+        
+        ringtone = new Audio('./assets/audio/lofi-5s.mp3');
         ringtone.loop = false;
 
         ringtone.onended = () => {
