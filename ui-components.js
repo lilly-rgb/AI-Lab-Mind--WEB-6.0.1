@@ -115,7 +115,6 @@ function initializeAudioDemos() {
                 const agentName = button.dataset.play;
                 
                 const audioSrc = `./assets/audio/${currentLang}/${agentName}.mp3`;
-                
                 audioPlayer.src = audioSrc;
                 
                 try {
