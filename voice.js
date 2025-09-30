@@ -1,3 +1,4 @@
+
 import { getOrCreateUserId, getCookieConsent } from "./utils.js";
 import { getTranslation, currentLang } from "./language.js";
 import { trapFocus, releaseFocus } from './ui-components.js';
@@ -12,7 +13,6 @@ let callActive = false;
 let isInitialGreeting = false;
 let modal, statusText, statusIconContainer, endCallBtn, modalTitle, instructionsEl;
 let phoneLinkTrigger = null;
-let ringtone = null;
 
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 const recognitionSupported = !!SpeechRecognition;
@@ -115,11 +115,6 @@ function connectWebSocket() {
         try {
             const data = JSON.parse(event.data);
             if (data.type === 'assistant_audio' && data.audio) {
-                if (ringtone) {
-                    ringtone.pause();
-                    ringtone = null;
-                }
-
                 const audioBuffer = Uint8Array.from(atob(data.audio), c => c.charCodeAt(0));
                 const blob = new Blob([audioBuffer], { type: 'audio/mp3' });
                 const audioUrl = URL.createObjectURL(blob);
@@ -203,38 +198,27 @@ async function startCall() {
     if (callActive) return;
 
     callActive = true;
-    isInitialGreeting = true; // Set flag to handle the first audio from Iris specially
+    isInitialGreeting = true;
+
+    // Show modal and update status to "Connecting..." immediately
+    modal.style.display = 'flex';
+    trapFocus(modal, phoneLinkTrigger);
+    document.addEventListener('keydown', handleEscapeKey);
+    updateStatus('voice.status-connecting', 'fa-spinner fa-spin');
 
     try {
+        // Request microphone permission. This is necessary before anything else.
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        // We have permission, stop the track immediately as we don't need to record yet.
         stream.getTracks().forEach(track => track.stop());
 
-        modal.style.display = 'flex';
-        trapFocus(modal, phoneLinkTrigger);
-        document.addEventListener('keydown', handleEscapeKey);
-
-        updateStatus('voice.status-calling', 'fa-phone-volume');
-        
-        ringtone = new Audio('./assets/audio/lofi-5s.mp3');
-        ringtone.loop = false;
-
-        ringtone.onended = () => {
-            updateStatus('voice.status-connecting', 'fa-spinner fa-spin');
-            connectWebSocket();
-        };
-
-        ringtone.play().catch(err => {
-            console.error("Could not play ringtone:", err);
-            updateStatus('voice.status-connecting', 'fa-spinner fa-spin');
-            connectWebSocket();
-        });
+        // Now that we have permission, connect the WebSocket.
+        // The backend will send the first audio (ringtone or greeting).
+        connectWebSocket();
 
     } catch (err) {
+        // Handle microphone permission denial gracefully
         console.error('Microphone access denied:', err);
-        
-        modal.style.display = 'flex';
-        trapFocus(modal, phoneLinkTrigger);
-        document.addEventListener('keydown', handleEscapeKey);
         
         let instructionsKey;
         const userAgent = navigator.userAgent.toLowerCase();
@@ -254,10 +238,11 @@ async function startCall() {
         }
 
         endCallBtn.textContent = getTranslation('voice.close-btn');
-        callActive = false;
+        callActive = false; // Reset call state since it never started
         isInitialGreeting = false;
     }
 }
+
 
 function endCall(userInitiated) {
     if (userInitiated && !callActive) {
@@ -285,11 +270,6 @@ function endCall(userInitiated) {
     audioQueue = [];
     isPlaying = false;
     isInitialGreeting = false;
-    
-    if (ringtone) {
-        ringtone.pause();
-        ringtone = null;
-    }
     
     setTimeout(() => {
         if(modal) modal.style.display = 'none';

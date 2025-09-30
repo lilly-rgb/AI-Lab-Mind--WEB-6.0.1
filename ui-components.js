@@ -114,8 +114,10 @@ function initializeAudioDemos() {
                 currentlyPlayingButton = button;
                 const agentName = button.dataset.play;
                 
-                const audioSrc = `./assets/audio/${currentLang}/${agentName}.mp3`;
-                audioPlayer.src = audioSrc;
+                // Construct a full, unambiguous URL to the audio file.
+                // This is the most robust way to handle paths in an SPA.
+                const audioUrl = new URL(`./assets/audio/${currentLang}/${agentName}.mp3`, document.baseURI).href;
+                audioPlayer.src = audioUrl;
                 
                 try {
                     await audioPlayer.play();
@@ -126,7 +128,7 @@ function initializeAudioDemos() {
                         icon.classList.add('fa-pause');
                     }
                 } catch (e) {
-                    console.error("Audio playback failed for " + audioSrc, e);
+                    console.error("Audio playback failed for " + audioUrl, e);
                     resetButton(button);
                     currentlyPlayingButton = null;
                 }
