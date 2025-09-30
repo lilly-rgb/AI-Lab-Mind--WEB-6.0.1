@@ -1,6 +1,7 @@
 
 
 
+
 import { currentLang, getTranslation, translations } from './language.js';
 
 let blogPosts = [];
@@ -55,7 +56,7 @@ function renderPosts(posts) {
 async function fetchAndSetPosts() {
     if (blogPosts.length > 0) return;
     try {
-        const response = await fetch('./data/blog-posts.json'); // Updated path
+        const response = await fetch('/data/blog-posts.json'); // Updated path
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const data = await response.json();
         blogPosts = data.sort((a, b) => new Date(b.date) - new Date(a.date));
