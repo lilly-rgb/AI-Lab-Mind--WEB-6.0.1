@@ -1,0 +1,637 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Lab Mind | Agentes de Voz y Chat con IA para PyMEs</title>
+
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="AI Lab Mind ofrece agentes de voz y chat con IA para pequeñas empresas. Automatiza el servicio al cliente, califica leads y agenda citas 24/7.">
+  <link rel="canonical" href="https://www.ailabmind.com/">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.ailabmind.com/">
+  <meta property="og:title" content="AI Lab Mind | Agentes de Voz y Chat con IA para PyMEs">
+  <meta property="og:description" content="Automatiza tu servicio al cliente, califica leads y agenda citas 24/7 con nuestros agentes inteligentes de voz y chat.">
+  <meta property="og:image" content="https://www.ailabmind.com/assets/img/strategic-ai-session.png">
+  <meta property="og:site_name" content="AI Lab Mind">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://www.ailabmind.com/">
+  <meta property="twitter:title" content="AI Lab Mind | Agentes de Voz y Chat con IA para PyMEs">
+  <meta property="twitter:description" content="Automatiza tu servicio al cliente, califica leads y agenda citas 24/7 con nuestros agentes inteligentes de voz y chat.">
+  <meta property="twitter:image" content="https://www.ailabmind.com/assets/img/strategic-ai-session.png">
+
+  <!-- Font Awesome is now imported in index.css -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="./index.css">
+<script type="importmap">
+{
+  "imports": {
+    "vite": "https://aistudiocdn.com/vite@^7.1.4",
+    "path": "https://aistudiocdn.com/path@^0.12.7",
+    "marked": "https://aistudiocdn.com/marked@^16.2.1",
+    "ogl": "https://aistudiocdn.com/ogl@^1.0.11",
+    "url": "https://aistudiocdn.com/url@^0.11.4",
+    "dompurify": "https://aistudiocdn.com/dompurify@^3.2.6",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.19.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+  <div id="animated-background-container">
+    <canvas id="backgroundCanvas"></canvas>
+  </div>
+
+  <nav class="navbar">
+    <div class="logo">
+      <img src="./assets/img/logo-icon.png" alt="Logo" /> AI Lab Mind
+    </div>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="#home" data-lang-key="nav.home">INICIO</a></li>
+      <li><a href="#solutions" data-lang-key="nav.solutions">SOLUCIONES</a></li>
+      <li><a href="#approach" data-lang-key="nav.approach">ENFOQUE</a></li>
+      <li><a href="#blog" data-lang-key="nav.blog">BLOG</a></li>
+      <li><a href="#faq" data-lang-key="nav.faq">PREGUNTAS FRECUENTES</a></li>
+      <li><a href="#contact" data-lang-key="nav.contact">CONTACTO</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button id="lang-toggle" class="mr-4 flex items-center gap-2 px-3 py-1 rounded-full border border-white/30 hover:bg-white/10 transition-colors">
+        <i class="fas fa-globe text-white/80"></i>
+        <span id="lang-toggle-text">EN</span>
+      </button>
+      <a href="#" class="phone-link" data-lang-title-key="nav.call-title">
+        <i class="fa fa-phone text-white"></i>
+      </a>
+    </div>
+    <button id="menu-toggle" class="menu-toggle" aria-controls="nav-links" aria-expanded="false" data-lang-aria-label-key="menu.toggle.open">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </nav>
+
+  <main>
+    <!-- Section: Home -->
+    <section class="content-section active" id="home">
+      <div class="relative flex flex-col items-center text-center px-6 pt-20 pb-16">
+        <div class="max-w-4xl">
+          <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight mb-4 text-white hero-title">
+            <span data-lang-key="home.hero-heading.part1"></span>
+            <span class="text-cyan-split" data-lang-key="home.hero-heading.part2"></span>
+          </h1>
+          <p class="text-lg sm:text-xl md:text-2xl text-white/80 mb-6 hero-subtitle" data-lang-key="home.hero-subheading"></p>
+          <div class="flex gap-6 items-center justify-center hero-buttons">
+            <a href="https://koalendar.com/e/ailabmind-es" target="_blank" rel="noopener noreferrer" class="btn-purple text-white font-semibold rounded-lg py-2 px-6" data-lang-key="home.book-call" data-lang-href-key="koalendar.link"></a>
+            <a href="#solutions" class="text-white border border-white bg-transparent font-semibold transition-all duration-300 ease-in-out" style="border-radius: 8px; padding-left: 1.5rem; padding-right: 1.5rem; padding-top: 0.5rem; padding-bottom: 0.5rem; box-shadow: 0 0 12px 2px rgba(0, 255, 255, 0.6);" onmouseover="this.style.boxShadow='0 0 18px 3px rgba(0, 255, 255, 0.8)';" onmouseout="this.style.boxShadow='0 0 12px 2px rgba(0, 255, 255, 0.6)';" data-lang-key="home.explore-solutions"></a>
+          </div>
+        </div>
+      </div>
+      <div class="pb-16 text-center">
+        <div class="max-w-7xl mx-auto px-6">
+          <div class="glass-container">
+            <div class="flex flex-col md:flex-row items-stretch justify-center gap-8 py-6">
+              <article class="card p-6 flex flex-col text-center max-w-sm w-full bg-white/10 rounded-xl">
+                <div class="flex-grow flex flex-col">
+                  <div class="w-full aspect-square rounded-xl overflow-hidden mb-4"><img alt="Iris" class="w-full h-full object-cover rounded-xl" src="./assets/img/iris.png" /></div>
+                  <h3 class="text-3xl font-extrabold" data-lang-key="home.iris-heading"></h3>
+                  <p class="text-white/80 mt-1" data-lang-key="home.iris-subheading"></p>
+                  <div class="flex-grow">
+                    <ul class="agent-features text-left mt-4 space-y-2 text-white/90">
+                        <li><i class="fas fa-check-circle"></i><span data-lang-key="home.iris.feature1"></span></li>
+                        <li><i class="fas fa-check-circle"></i><span data-lang-key="home.iris.feature2"></span></li>
+                        <li><i class="fas fa-check-circle"></i><span data-lang-key="home.iris.feature3"></span></li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="mt-auto pt-4 flex flex-col items-center gap-3">
+                  <button class="btn-purple btn-demo font-bold rounded-xl py-2 px-5 flex items-center justify-center gap-2" data-play="iris"><i class="fas fa-play"></i><span data-lang-key="home.listen-demo"></span></button>
+                </div>
+              </article>
+              <article class="card p-6 flex flex-col text-center max-w-sm w-full bg-white/10 rounded-xl">
+                <div class="flex-grow flex flex-col">
+                  <div class="w-full aspect-square rounded-xl overflow-hidden mb-4"><img alt="Mike" class="w-full h-full object-cover rounded-xl" src="./assets/img/mike.png" /></div>
+                  <h3 class="text-3xl font-extrabold" data-lang-key="home.mike-heading"></h3>
+                  <p class="text-white/80 mt-1" data-lang-key="home.mike-subheading"></p>
+                  <div class="flex-grow">
+                     <ul class="agent-features text-left mt-4 space-y-2 text-white/90">
+                        <li><i class="fas fa-check-circle"></i><span data-lang-key="home.mike.feature1"></span></li>
+                        <li><i class="fas fa-check-circle"></i><span data-lang-key="home.mike.feature2"></span></li>
+                        <li><i class="fas fa-check-circle"></i><span data-lang-key="home.mike.feature3"></span></li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="mt-auto pt-4 flex flex-col items-center gap-3">
+                  <button class="btn-purple btn-demo font-bold rounded-xl py-2 px-5 flex items-center justify-center gap-2" data-play="mike"><i class="fas fa-play"></i><span data-lang-key="home.listen-demo"></span></button>
+                </div>
+              </article>
+            </div>
+            <div class="card mt-10 p-8 text-center text-white rounded-xl">
+              <h3 class="text-3xl font-bold">
+                <span data-lang-key="home.banner-heading.part1"></span>
+                <span class="text-cyan-split" data-lang-key="home.banner-heading.part2"></span>
+              </h3>
+              <p class="mt-2 text-lg text-white/80" data-lang-key="home.banner-text-1"></p>
+              <p class="mt-2 text-lg text-white/80" data-lang-key="home.banner-text-2"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Features Section (Part of Home) -->
+      <div class="py-16">
+        <div class="max-w-7xl mx-auto px-6">
+          <div class="text-center">
+            <h2 class="text-3xl sm:text-4xl font-extrabold">
+              <span data-lang-key="features.heading.part1"></span>
+              <span class="text-cyan-split" data-lang-key="features.heading.part2"></span>
+            </h2>
+            <p class="mt-4 text-lg text-white/80 max-w-3xl mx-auto" data-lang-key="features.subheading"></p>
+          </div>
+          <div class="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Feature Card 1 -->
+            <div class="custom-card rounded-xl p-8 text-center flex flex-col">
+              <div class="text-4xl mb-4 text-cyan-300"><i class="fas fa-brain"></i></div>
+              <h3 class="text-xl font-bold mb-2" data-lang-key="features.card-1-title"></h3>
+              <p class="text-white/80 flex-grow" data-lang-key="features.card-1-text"></p>
+            </div>
+            <!-- Feature Card 2 -->
+            <div class="custom-card rounded-xl p-8 text-center flex flex-col">
+              <div class="text-4xl mb-4 text-cyan-300"><i class="fas fa-comments"></i></div>
+              <h3 class="text-xl font-bold mb-2" data-lang-key="features.card-2-title"></h3>
+              <p class="text-white/80 flex-grow" data-lang-key="features.card-2-text"></p>
+            </div>
+            <!-- Feature Card 3 -->
+            <div class="custom-card rounded-xl p-8 text-center flex flex-col">
+              <div class="text-4xl mb-4 text-cyan-300"><i class="fas fa-cogs"></i></div>
+              <h3 class="text-xl font-bold mb-2" data-lang-key="features.card-3-title"></h3>
+              <p class="text-white/80 flex-grow" data-lang-key="features.card-3-text"></p>
+            </div>
+            <!-- Feature Card 4 -->
+            <div class="custom-card rounded-xl p-8 text-center flex flex-col">
+              <div class="text-4xl mb-4 text-cyan-300"><i class="fas fa-user-clock"></i></div>
+              <h3 class="text-xl font-bold mb-2" data-lang-key="features.card-4-title"></h3>
+              <p class="text-white/80 flex-grow" data-lang-key="features.card-4-text"></p>
+            </div>
+            <!-- Feature Card 5 -->
+            <div class="custom-card rounded-xl p-8 text-center flex flex-col">
+              <div class="text-4xl mb-4 text-cyan-300"><i class="fas fa-chart-pie"></i></div>
+              <h3 class="text-xl font-bold mb-2" data-lang-key="features.card-5-title"></h3>
+              <p class="text-white/80 flex-grow" data-lang-key="features.card-5-text"></p>
+            </div>
+            <!-- Feature Card 6 -->
+            <div class="custom-card rounded-xl p-8 text-center flex flex-col">
+              <div class="text-4xl mb-4 text-cyan-300"><i class="fas fa-shield-alt"></i></div>
+              <h3 class="text-xl font-bold mb-2" data-lang-key="features.card-6-title"></h3>
+              <p class="text-white/80 flex-grow" data-lang-key="features.card-6-text"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section: Solutions -->
+    <section class="content-section" id="solutions">
+      <div class="max-w-7xl mx-auto px-6">
+        <h2 class="text-4xl font-extrabold text-center mb-12">
+          <span data-lang-key="solutions.heading.part1"></span>
+          <span class="text-cyan-split" data-lang-key="solutions.heading.part2"></span>
+        </h2>
+        <div class="consulting-card rounded-2xl overflow-hidden grid md:grid-cols-2 items-center">
+            <div class="consulting-card-content">
+                <h3 class="text-3xl font-bold mb-2" data-lang-key="solutions.consulting-title"></h3>
+                <p class="text-xl text-cyan-300 mb-4" data-lang-key="solutions.consulting-subtitle"></p>
+                <p class="text-white/80 mb-2" data-lang-key="solutions.consulting-description-1"></p>
+                <p class="text-white/80 mb-6" data-lang-key="solutions.consulting-description-2"></p>
+                <h4 class="text-lg font-semibold mb-3 text-cyan-300" data-lang-key="solutions.consulting-what-we-do"></h4>
+                <ul class="space-y-3 text-white/90 mb-6">
+                    <li class="flex"><i class="fas fa-check-circle text-cyan-300"></i><span data-lang-key="solutions.consulting-benefit-1"></span></li>
+                    <li class="flex"><i class="fas fa-check-circle text-cyan-300"></i><span data-lang-key="solutions.consulting-benefit-2"></span></li>
+                    <li class="flex"><i class="fas fa-check-circle text-cyan-300"></i><span data-lang-key="solutions.consulting-benefit-3"></span></li>
+                    <li class="flex"><i class="fas fa-check-circle text-cyan-300"></i><span data-lang-key="solutions.consulting-benefit-4"></span></li>
+                </ul>
+                <p class="text-sm font-semibold uppercase tracking-wider text-cyan-300/80 mb-6" data-lang-key="solutions.consulting-exclusive"></p>
+                <a href="https://koalendar.com/e/ailabmind-es" target="_blank" rel="noopener noreferrer" class="btn-purple text-white font-semibold rounded-lg py-3 px-8 text-lg" data-lang-key="solutions.consulting-cta" data-lang-href-key="koalendar.link"></a>
+            </div>
+            <div class="consulting-image-placeholder"><img src="./assets/img/strategic-ai-session.png" alt="Equipo profesional en una sesión de consultoría estratégica sobre IA."></div>
+        </div>
+
+        <!-- Solutions Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-16">
+          <!-- Card 1: Customer Service Agent -->
+          <div class="custom-card rounded-xl p-6 flex flex-col text-center">
+            <div class="w-16 h-16 rounded-full bg-cyan-500/10 border-2 border-cyan-400 flex items-center justify-center mb-4 mx-auto">
+              <i class="fas fa-headset text-2xl text-cyan-300"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-2" data-lang-key="solutions.card-1-title"></h3>
+            <p class="text-white/80 flex-grow" data-lang-key="solutions.card-1-text"></p>
+            <div class="mt-6"><a href="#contact" class="btn-purple text-sm font-semibold rounded-lg py-2 px-5" data-lang-key="solutions.cta-button"></a></div>
+          </div>
+          <!-- Card 2: Sales Agent -->
+          <div class="custom-card rounded-xl p-6 flex flex-col text-center">
+            <div class="w-16 h-16 rounded-full bg-cyan-500/10 border-2 border-cyan-400 flex items-center justify-center mb-4 mx-auto">
+              <i class="fas fa-chart-line text-2xl text-cyan-300"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-2" data-lang-key="solutions.card-2-title"></h3>
+            <p class="text-white/80 flex-grow" data-lang-key="solutions.card-2-text"></p>
+            <div class="mt-6"><a href="#contact" class="btn-purple text-sm font-semibold rounded-lg py-2 px-5" data-lang-key="solutions.cta-button"></a></div>
+          </div>
+          <!-- Card 3: Scheduling Agent -->
+          <div class="custom-card rounded-xl p-6 flex flex-col text-center">
+            <div class="w-16 h-16 rounded-full bg-cyan-500/10 border-2 border-cyan-400 flex items-center justify-center mb-4 mx-auto">
+              <i class="fas fa-calendar-check text-2xl text-cyan-300"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-2" data-lang-key="solutions.card-3-title"></h3>
+            <p class="text-white/80 flex-grow" data-lang-key="solutions.card-3-text"></p>
+            <div class="mt-6"><a href="#contact" class="btn-purple text-sm font-semibold rounded-lg py-2 px-5" data-lang-key="solutions.cta-button"></a></div>
+          </div>
+          <!-- Card 4: Social Media Agent -->
+          <div class="custom-card rounded-xl p-6 flex flex-col text-center">
+            <div class="w-16 h-16 rounded-full bg-cyan-500/10 border-2 border-cyan-400 flex items-center justify-center mb-4 mx-auto">
+              <i class="fas fa-share-alt text-2xl text-cyan-300"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-2" data-lang-key="solutions.card-4-title"></h3>
+            <p class="text-white/80 flex-grow" data-lang-key="solutions.card-4-text"></p>
+            <div class="mt-6"><a href="#contact" class="btn-purple text-sm font-semibold rounded-lg py-2 px-5" data-lang-key="solutions.cta-button"></a></div>
+          </div>
+          <!-- Card 5: Lead Generation Agent -->
+          <div class="custom-card rounded-xl p-6 flex flex-col text-center">
+            <div class="w-16 h-16 rounded-full bg-cyan-500/10 border-2 border-cyan-400 flex items-center justify-center mb-4 mx-auto">
+              <i class="fas fa-search-dollar text-2xl text-cyan-300"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-2" data-lang-key="solutions.card-5-title"></h3>
+            <p class="text-white/80 flex-grow" data-lang-key="solutions.card-5-text"></p>
+            <div class="mt-6"><a href="#contact" class="btn-purple text-sm font-semibold rounded-lg py-2 px-5" data-lang-key="solutions.cta-button"></a></div>
+          </div>
+          <!-- Card 6: Customer Retention Agent -->
+          <div class="custom-card rounded-xl p-6 flex flex-col text-center">
+            <div class="w-16 h-16 rounded-full bg-cyan-500/10 border-2 border-cyan-400 flex items-center justify-center mb-4 mx-auto">
+              <i class="fas fa-handshake text-2xl text-cyan-300"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-2" data-lang-key="solutions.card-6-title"></h3>
+            <p class="text-white/80 flex-grow" data-lang-key="solutions.card-6-text"></p>
+            <div class="mt-6"><a href="#contact" class="btn-purple text-sm font-semibold rounded-lg py-2 px-5" data-lang-key="solutions.cta-button"></a></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section: Approach -->
+    <section class="content-section" id="approach">
+       <div class="max-w-7xl mx-auto px-6 text-center">
+          <h2 class="text-4xl font-extrabold mb-4"><span data-lang-key="approach.heading.part1"></span> <span class="text-cyan-split" data-lang-key="approach.heading.part2"></span></h2>
+          <p class="text-xl text-white/80 max-w-4xl mx-auto"><span data-lang-key="approach.subheading-main.part1"></span> <span data-lang-key="approach.subheading-main.part2"></span></p>
+
+          <div class="mt-16 grid md:grid-cols-3 gap-8 text-left">
+            <!-- Step 1: Discovery -->
+            <div class="fx-card bg-white/5 p-8 rounded-2xl border border-white/10 flex flex-col items-center text-center">
+                <div class="w-16 h-16 rounded-full bg-cyan-500/10 border-2 border-cyan-400 flex items-center justify-center mb-4">
+                    <i class="fas fa-search text-2xl text-cyan-300"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-2 text-white" data-lang-key="approach.discovery-title"></h3>
+                <p class="text-white/70" data-lang-key="approach.discovery-text"></p>
+            </div>
+            <!-- Step 2: Design + Training -->
+            <div class="fx-card bg-white/5 p-8 rounded-2xl border border-white/10 flex flex-col items-center text-center">
+                <div class="w-16 h-16 rounded-full bg-cyan-500/10 border-2 border-cyan-400 flex items-center justify-center mb-4">
+                    <i class="fas fa-drafting-compass text-2xl text-cyan-300"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-2 text-white" data-lang-key="approach.design-title"></h3>
+                <p class="text-white/70" data-lang-key="approach.design-text"></p>
+            </div>
+            <!-- Step 3: Integration -->
+            <div class="fx-card bg-white/5 p-8 rounded-2xl border border-white/10 flex flex-col items-center text-center">
+                <div class="w-16 h-16 rounded-full bg-cyan-500/10 border-2 border-cyan-400 flex items-center justify-center mb-4">
+                    <i class="fas fa-rocket text-2xl text-cyan-300"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-2 text-white" data-lang-key="approach.integration-title"></h3>
+                <p class="text-white/70" data-lang-key="approach.integration-text"></p>
+            </div>
+          </div>
+          
+          <!-- Tech Stack -->
+          <div class="mt-20">
+              <h3 class="text-3xl font-extrabold" data-lang-key="approach.tech-stack-title"></h3>
+              <p class="text-lg text-white/70 mt-2 mb-10" data-lang-key="approach.tech-stack-subtitle"></p>
+              <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+                  <div class="bg-white/5 p-6 rounded-lg"><div class="text-3xl text-cyan-400 mb-3"><i class="fas fa-robot"></i></div><h4 class="font-bold text-lg mb-1" data-lang-key="approach.tech-1-title"></h4><p class="text-sm text-white/60" data-lang-key="approach.tech-1-text"></p></div>
+                  <div class="bg-white/5 p-6 rounded-lg"><div class="text-3xl text-cyan-400 mb-3"><i class="fas fa-language"></i></div><h4 class="font-bold text-lg mb-1" data-lang-key="approach.tech-2-title"></h4><p class="text-sm text-white/60" data-lang-key="approach.tech-2-text"></p></div>
+                  <div class="bg-white/5 p-6 rounded-lg"><div class="text-3xl text-cyan-400 mb-3"><i class="fas fa-plug"></i></div><h4 class="font-bold text-lg mb-1" data-lang-key="approach.tech-3-title"></h4><p class="text-sm text-white/60" data-lang-key="approach.tech-3-text"></p></div>
+                  <div class="bg-white/5 p-6 rounded-lg"><div class="text-3xl text-cyan-400 mb-3"><i class="fas fa-cloud"></i></div><h4 class="font-bold text-lg mb-1" data-lang-key="approach.tech-4-title"></h4><p class="text-sm text-white/60" data-lang-key="approach.tech-4-text"></p></div>
+              </div>
+          </div>
+
+          <!-- The Result -->
+          <div class="mt-20">
+              <h3 class="text-3xl font-extrabold"><span class="text-cyan-split" data-lang-key="approach.results-title"></span></h3>
+              <p class="text-lg text-white/70 mt-2 mb-10" data-lang-key="approach.results-subtitle"></p>
+              <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+                  <div class="bg-white/5 p-6 rounded-lg"><div class="text-3xl text-cyan-400 mb-3"><i class="fas fa-dollar-sign"></i></div><h4 class="font-bold text-lg mb-1" data-lang-key="approach.results-1-title"></h4><p class="text-sm text-white/60" data-lang-key="approach.results-1-text"></p></div>
+                  <div class="bg-white/5 p-6 rounded-lg"><div class="text-3xl text-cyan-400 mb-3"><i class="fas fa-heart"></i></div><h4 class="font-bold text-lg mb-1" data-lang-key="approach.results-2-title"></h4><p class="text-sm text-white/60" data-lang-key="approach.results-2-text"></p></div>
+                  <div class="bg-white/5 p-6 rounded-lg"><div class="text-3xl text-cyan-400 mb-3"><i class="fas fa-coffee"></i></div><h4 class="font-bold text-lg mb-1" data-lang-key="approach.results-3-title"></h4><p class="text-sm text-white/60" data-lang-key="approach.results-3-text"></p></div>
+                  <div class="bg-white/5 p-6 rounded-lg"><div class="text-3xl text-cyan-400 mb-3"><i class="fas fa-chart-area"></i></div><h4 class="font-bold text-lg mb-1" data-lang-key="approach.results-4-title"></h4><p class="text-sm text-white/60" data-lang-key="approach.results-4-text"></p></div>
+              </div>
+          </div>
+
+       </div>
+    </section>
+
+
+    <!-- Section: Blog -->
+    <section class="content-section" id="blog">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <h2 class="text-4xl font-extrabold mb-4"><span data-lang-key="blog.heading.part1"></span> <span class="text-cyan-split" data-lang-key="blog.heading.part2"></span></h2>
+            <div class="flex flex-wrap justify-center gap-2 md:gap-4 my-8">
+                <button class="filter-btn active btn-todos" data-lang-key="blog.filter-all"></button>
+                <button class="filter-btn btn-automatizacion" data-lang-key="blog.filter-automation"></button>
+                <button class="filter-btn btn-estrategia" data-lang-key="blog.filter-strategy"></button>
+                <button class="filter-btn btn-ventas" data-lang-key="blog.filter-sales"></button>
+                <button class="filter-btn btn-common-errors" data-lang-key="blog.filter-errors"></button>
+                <button class="filter-btn btn-educacion" data-lang-key="blog.filter-education"></button>
+                <button class="filter-btn btn-desde-adentro" data-lang-key="blog.filter-inside-stories"></button>
+            </div>
+            <div id="blog-posts-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Blog posts will be injected here by blog.js -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Section: FAQ -->
+    <section class="content-section" id="faq">
+       <div class="max-w-4xl mx-auto px-6">
+          <h2 class="text-4xl font-extrabold text-center mb-12">
+             <span data-lang-key="faq.heading.part1"></span>
+             <span class="text-cyan-split" data-lang-key="faq.heading.part2"></span>
+          </h2>
+          <div class="space-y-4">
+             <details class="faq-details"><summary class="faq-summary" data-lang-key="faq.question-1-title"></summary><div class="faq-answer"><p data-lang-key="faq.question-1-answer"></p></div></details>
+             <details class="faq-details"><summary class="faq-summary" data-lang-key="faq.question-2-title"></summary><div class="faq-answer"><p data-lang-key="faq.question-2-answer"></p></div></details>
+             <details class="faq-details"><summary class="faq-summary" data-lang-key="faq.question-3-title"></summary><div class="faq-answer"><p data-lang-key="faq.question-3-answer"></p></div></details>
+             <details class="faq-details"><summary class="faq-summary" data-lang-key="faq.question-4-title"></summary><div class="faq-answer"><p data-lang-key="faq.question-4-answer"></p></div></details>
+             <details class="faq-details"><summary class="faq-summary" data-lang-key="faq.question-5-title"></summary><div class="faq-answer"><p data-lang-key="faq.question-5-answer"></p></div></details>
+             <details class="faq-details"><summary class="faq-summary" data-lang-key="faq.question-6-title"></summary><div class="faq-answer"><p data-lang-key="faq.question-6-answer"></p></div></details>
+             <details class="faq-details"><summary class="faq-summary" data-lang-key="faq.question-7-title"></summary><div class="faq-answer"><p data-lang-key="faq.question-7-answer"></p></div></details>
+             <details class="faq-details"><summary class="faq-summary" data-lang-key="faq.question-8-title"></summary><div class="faq-answer"><p data-lang-key="faq.question-8-answer"></p></div></details>
+             <details class="faq-details"><summary class="faq-summary" data-lang-key="faq.question-9-title"></summary><div class="faq-answer"><p data-lang-key="faq.question-9-answer"></p></div></details>
+             <details class="faq-details"><summary class="faq-summary" data-lang-key="faq.question-10-title"></summary><div class="faq-answer"><p data-lang-key="faq.question-10-answer"></p></div></details>
+             <details class="faq-details"><summary class="faq-summary" data-lang-key="faq.question-11-title"></summary><div class="faq-answer"><p data-lang-key="faq.question-11-answer"></p></div></details>
+             <details class="faq-details"><summary class="faq-summary" data-lang-key="faq.question-12-title"></summary><div class="faq-answer"><p data-lang-key="faq.question-12-answer"></p></div></details>
+             <details class="faq-details"><summary class="faq-summary" data-lang-key="faq.question-13-title"></summary><div class="faq-answer"><p data-lang-key="faq.question-13-answer"></p></div></details>
+             <details class="faq-details"><summary class="faq-summary" data-lang-key="faq.question-14-title"></summary><div class="faq-answer"><p data-lang-key="faq.question-14-answer"></p></div></details>
+             <details class="faq-details"><summary class="faq-summary" data-lang-key="faq.question-15-title"></summary><div class="faq-answer"><p data-lang-key="faq.question-15-answer"></p></div></details>
+          </div>
+       </div>
+    </section>
+
+    <!-- Section: Contact -->
+    <section class="content-section" id="contact">
+       <div class="max-w-5xl mx-auto px-6">
+          <div class="text-center">
+             <h2 class="text-4xl font-extrabold"><span data-lang-key="contact.heading.part1"></span> <span class="text-cyan-split" data-lang-key="contact.heading.part2"></span></h2>
+             <p class="mt-4 text-lg text-white/80"><span data-lang-key="contact.subheading.part1"></span> <span data-lang-key="contact.subheading.part2"></span></p>
+          </div>
+          <div class="mt-12 grid md:grid-cols-2 gap-12 items-start">
+             <div class="bg-white/5 p-8 rounded-xl border border-white/10">
+                <form id="contact-form" class="space-y-6">
+                   <div><label for="name" class="block mb-2 font-semibold" data-lang-key="contact.form-name-label"></label><input type="text" id="name" name="name" class="w-full p-3 rounded-lg bg-white/10 border border-white/20 focus:ring-2 focus:ring-cyan-400 outline-none" data-lang-placeholder-key="contact.form-name-placeholder" required autocomplete="name"></div>
+                   <div><label for="email" class="block mb-2 font-semibold" data-lang-key="contact.form-email-label"></label><input type="email" id="email" name="email" class="w-full p-3 rounded-lg bg-white/10 border border-white/20 focus:ring-2 focus:ring-cyan-400 outline-none" data-lang-placeholder-key="contact.form-email-placeholder" required autocomplete="email"></div>
+                   <div><label for="phone" class="block mb-2 font-semibold" data-lang-key="contact.form-phone-label"></label><input type="tel" id="phone" name="phone" class="w-full p-3 rounded-lg bg-white/10 border border-white/20 focus:ring-2 focus:ring-cyan-400 outline-none" data-lang-placeholder-key="contact.form-phone-placeholder" autocomplete="tel"></div>
+                   <div><label for="message" class="block mb-2 font-semibold" data-lang-key="contact.form-message-label"></label><textarea id="message" name="message" rows="4" class="w-full p-3 rounded-lg bg-white/10 border border-white/20 focus:ring-2 focus:ring-cyan-400 outline-none" data-lang-placeholder-key="contact.form-message-placeholder" required></textarea></div>
+                   <!-- Honeypot field: this should not be filled by humans -->
+                   <div style="position: absolute; left: -5000px;" aria-hidden="true">
+                      <input type="text" name="bot-field" tabindex="-1" autocomplete="off">
+                   </div>
+                   <div class="newsletter-consent-contact">
+                      <input type="checkbox" id="newsletter-consent-contact" name="newsletter-consent">
+                      <label for="newsletter-consent-contact">
+                        <span data-lang-key="consent.agree-marketing"></span>
+                        <a href="./assets/legal/privacy-es.html" target="_blank" class="underline" data-lang-key="consent.privacy-policy" data-lang-href-key="legal.privacy-link"></a>.
+                      </label>
+                   </div>
+                   <button type="submit" class="w-full btn-purple font-bold py-3 px-6 rounded-lg text-lg" data-lang-key="contact.submit"></button>
+                </form>
+                <div id="contact-form-success" class="hidden text-center bg-green-500/20 p-6 rounded-lg">
+                    <h3 class="text-xl font-bold mb-2 text-green-300" data-lang-key="contact.form-success-heading"></h3>
+                    <p class="text-white/80" data-lang-key="contact.form-success-text"></p>
+                </div>
+             </div>
+             <div class="md:mt-4">
+                <h3 class="text-2xl font-bold mb-6"><span data-lang-key="contact.other-ways.part1"></span> <span class="text-cyan-split" data-lang-key="contact.other-ways.part2"></span></h3>
+                <div class="space-y-8">
+                   <div class="flex items-center gap-4">
+                      <a href="#" class="phone-link text-xl"><i class="fas fa-phone"></i></a>
+                      <div>
+                         <div class="font-bold text-lg" data-lang-key="contact.call-us-title"></div>
+                         <p class="text-white/70" data-lang-key="contact.call-us-subtitle"></p>
+                      </div>
+                   </div>
+                   <div class="flex items-center gap-4"><a href="mailto:info@ailabmind.com" class="icon-link text-xl"><i class="fas fa-envelope"></i></a><div><div class="font-bold text-lg" data-lang-key="contact.write-us"></div><p class="text-white/70">info@ailabmind.com</p></div></div>
+                   <div class="flex items-center gap-4">
+                      <a href="https://koalendar.com/e/ailabmind-es" target="_blank" rel="noopener noreferrer" class="icon-link text-xl" data-lang-href-key="koalendar.link"><i class="fas fa-calendar-check"></i></a>
+                      <div>
+                         <div class="font-bold text-lg" data-lang-key="contact.schedule-title"></div>
+                         <p class="text-white/70" data-lang-key="contact.schedule-subtitle"></p>
+                      </div>
+                   </div>
+                   <div class="flex items-center gap-4"><div class="icon-link text-xl flex items-center justify-center"><i class="fas fa-share-alt"></i></div><div><div class="font-bold text-lg" data-lang-key="contact.follow-us"></div>
+                    <div class="flex gap-4 mt-4">
+                      <a href="https://www.instagram.com/ailabmind" target="_blank" rel="noopener noreferrer" class="text-white/70 hover:text-white"><i class="fab fa-instagram fa-lg"></i></a>
+                      <a href="https://www.youtube.com/@ailabmind" target="_blank" rel="noopener noreferrer" class="text-white/70 hover:text-white"><i class="fab fa-youtube fa-lg"></i></a>
+                      <a href="https://www.tiktok.com/@ai_labmind?lang=es" target="_blank" rel="noopener noreferrer" class="text-white/70 hover:text-white"><i class="fab fa-tiktok fa-lg"></i></a>
+                      <a href="https://www.facebook.com/profile.php?id=61572496658271" target="_blank" rel="noopener noreferrer" class="text-white/70 hover:text-white"><i class="fab fa-facebook fa-lg"></i></a>
+                    </div>
+                  </div>
+                </div>
+                </div>
+             </div>
+          </div>
+       </div>
+    </section>
+
+    <!-- Section: Post Detail -->
+    <section class="content-section" id="post-detail">
+      <div class="max-w-4xl mx-auto px-6">
+        <a href="#blog" class="back-link"><span data-lang-key="post.back-to-blog"></span></a>
+        <div id="post-badge-container"></div>
+        <h1 id="post-h1" class="font-extrabold"></h1>
+        <div class="meta-info">
+            <span id="post-author"></span>
+            <span>&bull;</span>
+            <time id="post-date" datetime=""></time>
+        </div>
+        <img id="featured-image" src="" alt="" class="featured-image">
+        <div class="share-buttons">
+            <a id="share-fb" href="#" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook-f"></i></a>
+            <a id="share-tw" href="#" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter"></i></a>
+            <a id="share-li" href="#" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin-in"></i></a>
+            <a id="share-wa" href="#" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i></a>
+        </div>
+        <article id="article-content" class="prose"></article>
+      </div>
+    </section>
+  </main>
+  
+  <footer class="site-footer">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="footer-grid">
+        <div>
+          <h3 class="font-bold text-lg mb-4" data-lang-key="footer.links-heading"></h3>
+          <ul class="space-y-2">
+            <li><a href="#home" data-lang-key="nav.home"></a></li>
+            <li><a href="#solutions" data-lang-key="nav.solutions"></a></li>
+            <li><a href="#approach" data-lang-key="nav.approach"></a></li>
+            <li><a href="#blog" data-lang-key="nav.blog"></a></li>
+            <li><a href="#faq" data-lang-key="nav.faq"></a></li>
+            <li><a href="#contact" data-lang-key="nav.contact"></a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-bold text-lg mb-4" data-lang-key="footer.social-heading"></h3>
+          <div class="flex gap-4">
+            <a href="https://www.instagram.com/ailabmind" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram fa-lg"></i></a>
+            <a href="https://www.youtube.com/@ailabmind" target="_blank" rel="noopener noreferrer"><i class="fab fa-youtube fa-lg"></i></a>
+            <a href="https://www.tiktok.com/@ai_labmind?lang=es" target="_blank" rel="noopener noreferrer"><i class="fab fa-tiktok fa-lg"></i></a>
+            <a href="https://www.facebook.com/profile.php?id=61572496658271" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook fa-lg"></i></a>
+          </div>
+        </div>
+        <div class="col-span-1 lg:col-span-2">
+          <h3 class="font-bold text-lg mb-4" data-lang-key="footer.newsletter-heading"></h3>
+          <form id="newsletter-form" class="newsletter">
+            <label for="footer-email-input" class="sr-only" data-lang-key="footer.email-label"></label>
+            <input type="email" id="footer-email-input" name="email" data-lang-placeholder-key="footer.newsletter-placeholder" required class="w-full" autocomplete="email">
+            <button type="submit" class="btn-purple rounded-xl py-2 px-5 font-semibold" data-lang-key="footer.newsletter-button"></button>
+            <!-- Honeypot field: this should not be filled by humans -->
+            <div style="position: absolute; left: -5000px;" aria-hidden="true">
+               <input type="text" name="bot-field" tabindex="-1" autocomplete="off">
+            </div>
+            <div class="newsletter-consent-footer">
+              <input type="checkbox" id="newsletter-consent-footer" name="newsletter-consent" required>
+              <label for="newsletter-consent-footer">
+                <span data-lang-key="consent.agree-marketing"></span>
+                <a href="./assets/legal/privacy-es.html" target="_blank" class="underline" data-lang-key="consent.privacy-policy" data-lang-href-key="legal.privacy-link"></a>.
+              </label>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="text-center text-sm text-slate-400 mt-8 pt-8 border-t border-white/10">
+        <p>
+          &copy; 2024 AI Lab Mind. <span data-lang-key="footer.rights-reserved"></span>
+          <span id="app-version-container" class="opacity-70">
+            | <span data-lang-key="footer.version"></span>: <span id="app-version">1.0.6</span>
+          </span>
+        </p>
+        <p class="mt-1" data-lang-key="footer.tagline"></p>
+        <div class="legal-links">
+          <a href="./assets/legal/terms-es.html" target="_blank" data-lang-key="footer.terms" data-lang-href-key="legal.terms-link"></a>
+          <a href="./assets/legal/privacy-es.html" target="_blank" data-lang-key="footer.privacy" data-lang-href-key="legal.privacy-link"></a>
+          <a href="./assets/legal/cookies-es.html" target="_blank" data-lang-key="footer.cookies" data-lang-href-key="legal.cookies-link"></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Chatbot -->
+  <div id="chat-bubble" class="fixed bottom-6 right-6 btn-purple rounded-full w-16 h-16 flex items-center justify-center cursor-pointer shadow-lg">
+    <i class="fas fa-comment-dots text-2xl"></i>
+  </div>
+  <div id="chat-widget" role="dialog" aria-modal="true" aria-labelledby="chat-widget-title" class="hidden fixed bottom-24 right-6 w-full max-w-sm h-[70vh] max-h-[600px] bg-black/70 backdrop-blur-xl rounded-2xl shadow-2xl flex flex-col border border-white/20">
+    <div class="flex items-center justify-between p-4 border-b border-white/10">
+      <div class="flex items-center gap-3">
+        <div id="chat-avatar-container" class="relative w-12 h-12 rounded-full overflow-hidden border-2 border-cyan-400"><img src="./assets/img/iris.png" alt="Iris Avatar" class="w-full h-full object-cover"></div>
+        <div>
+          <h3 id="chat-widget-title" class="font-bold">Iris</h3>
+          <p class="text-sm text-white/60">AI Assistant</p>
+        </div>
+      </div>
+      <button id="close-chat" class="text-2xl text-white/70 hover:text-white" aria-label="Cerrar chat">&times;</button>
+    </div>
+    <div id="chat-messages" class="flex-1 p-4 overflow-y-auto"></div>
+    <div id="chat-typing-indicator" class="hidden p-4 flex items-center gap-2">
+      <span data-lang-key="chat.typing"></span><span></span><span></span><span></span>
+    </div>
+    <div class="p-4 border-t border-white/10">
+      <form id="chat-form" class="flex gap-2">
+        <label for="chat-input" class="sr-only" data-lang-key="chat.input-label"></label>
+        <input type="text" id="chat-input" name="chat-input" class="flex-1 bg-white/10 border border-white/20 rounded-lg p-3 outline-none focus:ring-2 focus:ring-cyan-400" data-lang-placeholder-key="chat.placeholder" autocomplete="off">
+        <button type="submit" class="btn-chat-send rounded-lg w-12 h-12 flex items-center justify-center text-xl" data-lang-aria-label-key="chat.send-button-label"><i class="fas fa-paper-plane"></i></button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Cookie Consent Banner -->
+  <div id="cookie-consent-banner" class="hidden">
+      <div class="consent-banner-content">
+          <div class="consent-text">
+              <h3 data-lang-key="consent.title"></h3>
+              <p>
+                  <span data-lang-key="consent.description"></span>
+                  <a href="./assets/legal/cookies-es.html" target="_blank" class="underline" data-lang-key="consent.cookie-policy-link" data-lang-href-key="legal.cookies-link"></a>
+              </p>
+          </div>
+          <div class="consent-actions">
+              <button id="cookie-settings-btn" class="btn-secondary" data-lang-key="consent.settings"></button>
+              <button id="reject-all-cookies-btn" class="btn-secondary" data-lang-key="consent.reject-all"></button>
+              <button id="accept-all-cookies-btn" class="btn-purple" data-lang-key="consent.accept-all"></button>
+          </div>
+      </div>
+  </div>
+
+  <!-- Privacy Preference Center Modal -->
+  <div id="privacy-preference-center" class="modal" role="dialog" aria-modal="true" aria-labelledby="privacy-center-title">
+    <div class="privacy-modal-content">
+      <div class="privacy-modal-header">
+        <h3 id="privacy-center-title" data-lang-key="privacy-center.title"></h3>
+        <button id="close-privacy-center" class="close-btn" aria-label="Cerrar preferencias de privacidad">&times;</button>
+      </div>
+      <div class="privacy-modal-body">
+        <p data-lang-key="privacy-center.description"></p>
+        <div class="cookie-category">
+          <div class="category-header">
+            <h4 data-lang-key="privacy-center.necessary.title" id="necessary-cookies-heading"></h4>
+            <label class="toggle-switch"><input type="checkbox" id="necessary-cookies" name="necessary-cookies" checked disabled aria-labelledby="necessary-cookies-heading"><span class="slider"></span></label>
+          </div>
+          <p class="category-description" data-lang-key="privacy-center.necessary.description"></p>
+        </div>
+        <div class="cookie-category">
+          <div class="category-header">
+            <h4 data-lang-key="privacy-center.performance.title" id="performance-cookies-heading"></h4>
+            <label class="toggle-switch"><input type="checkbox" id="performance-cookies" name="performance-cookies" checked aria-labelledby="performance-cookies-heading"><span class="slider"></span></label>
+          </div>
+          <p class="category-description" data-lang-key="privacy-center.performance.description"></p>
+        </div>
+        <div class="cookie-category">
+          <div class="category-header">
+            <h4 data-lang-key="privacy-center.functional.title" id="functional-cookies-heading"></h4>
+            <label class="toggle-switch"><input type="checkbox" id="functional-cookies" name="functional-cookies" checked aria-labelledby="functional-cookies-heading"><span class="slider"></span></label>
+          </div>
+          <p class="category-description" data-lang-key="privacy-center.functional.description"></p>
+        </div>
+        <div class="cookie-category">
+          <div class="category-header">
+            <h4 data-lang-key="privacy-center.targeting.title" id="targeting-cookies-heading"></h4>
+            <label class="toggle-switch"><input type="checkbox" id="targeting-cookies" name="targeting-cookies" checked aria-labelledby="targeting-cookies-heading"><span class="slider"></span></label>
+          </div>
+          <p class="category-description" data-lang-key="privacy-center.targeting.description"></p>
+        </div>
+        <div class="newsletter-consent">
+            <div class="category-header">
+                <h4 data-lang-key="consent.newsletter-label" id="newsletter-checkbox-heading"></h4>
+                <label class="toggle-switch"><input type="checkbox" id="newsletter-checkbox" name="newsletter-checkbox" aria-labelledby="newsletter-checkbox-heading"><span class="slider"></span></label>
+            </div>
+        </div>
+      </div>
+      <div class="privacy-modal-footer">
+          <button id="accept-all-in-modal-btn" class="btn-secondary" data-lang-key="consent.accept-all"></button>
+          <button id="save-preferences-btn" class="btn-purple" data-lang-key="privacy-center.save"></button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./index.js"></script>
+</body>
+</html>

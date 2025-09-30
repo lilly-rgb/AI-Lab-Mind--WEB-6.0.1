@@ -1,0 +1,21 @@
+{
+  "name": "ailabmind-web",
+  "private": true,
+  "version": "1.0.6",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "path": "^0.12.7",
+    "marked": "^16.2.1",
+    "ogl": "^1.0.11",
+    "url": "^0.11.4",
+    "dompurify": "^3.2.6"
+  },
+  "devDependencies": {
+    "vite": "^6.2.0"
+  }
+}

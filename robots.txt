@@ -1,0 +1,7 @@
+# Permitir a todos los robots de búsqueda acceder a todo el contenido.
+User-agent: *
+Allow: /
+
+# Ubicación del mapa del sitio (Sitemap). 
+# Es una buena práctica tener un sitemap para ayudar a los motores de búsqueda a descubrir todas tus páginas.
+Sitemap: https://www.ailabmind.com/sitemap.xml
