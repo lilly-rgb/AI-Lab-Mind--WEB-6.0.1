@@ -9,6 +9,7 @@ let recognition;
 let audioQueue = [];
 let isPlaying = false;
 let callActive = false;
+let isInitialGreeting = false;
 let modal, statusText, statusIconContainer, endCallBtn, modalTitle, instructionsEl;
 let phoneLinkTrigger = null;
 let ringtone = null;
@@ -73,7 +74,14 @@ function playNextInQueue() {
     audio.play();
     audio.onended = () => {
         isPlaying = false;
-        if (callActive) {
+        // After the initial greeting, start listening.
+        if (isInitialGreeting) {
+            isInitialGreeting = false;
+            if (callActive) {
+                startRecognition();
+            }
+        } else if (callActive) {
+            // For subsequent turns, just ensure recognition is running
             updateStatus('voice.status-listening', 'fa-microphone-alt');
             if (recognition) recognition.start();
         }
@@ -82,7 +90,6 @@ function playNextInQueue() {
 }
 
 function connectWebSocket() {
-    updateStatus('voice.status-connecting', 'fa-spinner fa-spin');
     socket = new WebSocket(WEBSOCKET_URL);
 
     socket.onopen = () => {
@@ -99,7 +106,9 @@ function connectWebSocket() {
             }
         };
         socket.send(JSON.stringify(payload));
-        startRecognition();
+        
+        // After connecting, send a special event to trigger the initial greeting from Iris.
+        socket.send(JSON.stringify({ type: "init_call" }));
     };
 
     socket.onmessage = (event) => {
@@ -193,31 +202,37 @@ function handleEscapeKey(event) {
 async function startCall() {
     if (callActive) return;
 
+    callActive = true;
+    isInitialGreeting = true; // Set flag to handle the first audio from Iris specially
+
     try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         stream.getTracks().forEach(track => track.stop());
 
-        callActive = true;
         modal.style.display = 'flex';
         trapFocus(modal, phoneLinkTrigger);
         document.addEventListener('keydown', handleEscapeKey);
 
-        // 🔔 Reproducir tono de llamada (5s lo-fi)
-        ringtone = new Audio('/assets/audio/lofi-5s.mp3');
-        ringtone.loop = false;
-        ringtone.play().catch(err => console.error("No se pudo reproducir el tono:", err));
+        updateStatus('voice.status-calling', 'fa-phone-volume');
 
-        // ⏳ esperar 5 segundos antes de iniciar WebSocket
-        setTimeout(() => {
-            if (callActive) { // Only connect if the call wasn't cancelled during the timeout
-                connectWebSocket();
-            }
-        }, 5000);
+        const ringtoneUrl = new URL('./assets/audio/lofi-5s.mp3', document.baseURI).href;
+        ringtone = new Audio(ringtoneUrl);
+        ringtone.loop = false;
+
+        ringtone.onended = () => {
+            updateStatus('voice.status-connecting', 'fa-spinner fa-spin');
+            connectWebSocket();
+        };
+
+        ringtone.play().catch(err => {
+            console.error("Could not play ringtone:", err);
+            updateStatus('voice.status-connecting', 'fa-spinner fa-spin');
+            connectWebSocket();
+        });
 
     } catch (err) {
         console.error('Microphone access denied:', err);
         
-        // Show modal to display the error
         modal.style.display = 'flex';
         trapFocus(modal, phoneLinkTrigger);
         document.addEventListener('keydown', handleEscapeKey);
@@ -233,23 +248,25 @@ async function startCall() {
             instructionsKey = 'voice.mic-denied-instructions-generic';
         }
         
-        updateStatus('voice.mic-permission-denied', 'fa-microphone-slash');
+        updateStatus('voice.status-mic-denied', 'fa-microphone-slash');
         if (instructionsEl) {
             instructionsEl.innerHTML = getTranslation(instructionsKey);
             instructionsEl.classList.remove('hidden');
         }
 
         endCallBtn.textContent = getTranslation('voice.close-btn');
-        callActive = false; // Ensure state is correct for endCall logic
+        callActive = false;
+        isInitialGreeting = false;
     }
 }
 
 function endCall(userInitiated) {
     if (userInitiated && !callActive) {
-        // This handles closing the modal after a permission error
         modal.style.display = 'none';
         releaseFocus();
         document.removeEventListener('keydown', handleEscapeKey);
+        endCallBtn.textContent = getTranslation('voice.end-call');
+        if (instructionsEl) instructionsEl.classList.add('hidden');
         return;
     }
 
@@ -268,17 +285,19 @@ function endCall(userInitiated) {
     
     audioQueue = [];
     isPlaying = false;
+    isInitialGreeting = false;
     
     if (ringtone) {
         ringtone.pause();
         ringtone = null;
     }
     
-    // Use a short delay before hiding the modal so the user sees the "Call Ended" message
     setTimeout(() => {
         if(modal) modal.style.display = 'none';
         releaseFocus();
         document.removeEventListener('keydown', handleEscapeKey);
+        endCallBtn.textContent = getTranslation('voice.end-call');
+        if (instructionsEl) instructionsEl.classList.add('hidden');
     }, userInitiated ? 1500 : 0);
     
     callActive = false;
