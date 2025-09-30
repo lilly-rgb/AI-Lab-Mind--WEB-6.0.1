@@ -9,7 +9,7 @@ let recognition;
 let audioQueue = [];
 let isPlaying = false;
 let callActive = false;
-let modal, statusText, statusIconContainer, endCallBtn, modalTitle;
+let modal, statusText, statusIconContainer, endCallBtn, modalTitle, instructionsEl;
 let phoneLinkTrigger = null;
 let ringtone = null;
 
@@ -29,7 +29,8 @@ function createVoiceModal() {
                 <div id="voice-status-icon" class="my-6 h-16 flex items-center justify-center">
                     <i class="fas fa-microphone-alt text-5xl text-cyan-400"></i>
                 </div>
-                <p id="voice-modal-status" class="text-lg text-white/80 h-8 mb-6" data-lang-key="voice.status-initializing">${getTranslation('voice.status-initializing')}</p>
+                <p id="voice-modal-status" class="text-lg text-white/80 h-8 mb-2" data-lang-key="voice.status-initializing">${getTranslation('voice.status-initializing')}</p>
+                <p id="voice-modal-instructions" class="text-sm text-white/60 mb-6 hidden"></p>
                 <button id="end-call-btn" class="btn-purple bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg py-3 px-8 text-lg" data-lang-key="voice.end-call">
                     ${getTranslation('voice.end-call')}
                 </button>
@@ -44,6 +45,7 @@ function createVoiceModal() {
     statusIconContainer = document.getElementById('voice-status-icon');
     endCallBtn = document.getElementById('end-call-btn');
     modalTitle = document.getElementById('voice-modal-title');
+    instructionsEl = document.getElementById('voice-modal-instructions');
 
     endCallBtn.addEventListener('click', () => endCall(true));
 }
@@ -204,93 +206,101 @@ async function startCall() {
 
         // Permission granted, proceed with the call
         callActive = true; 
+        endCallBtn.textContent = getTranslation('voice.end-call');
+        if (instructionsEl) instructionsEl.classList.add('hidden');
 
-        ringtone = new Audio('./assets/audio/lofi-5s.mp3'); // Use relative path
-        ringtone.loop = false;
-        ringtone.play().catch(err => console.error("Could not play ringtone:", err));
+        try {
+            // Construct a full, unambiguous URL using the document's base URI.
+            // This is the most robust method to prevent file loading errors.
+            const ringtoneUrl = new URL('./assets/audio/ringtone.mp3', document.baseURI).href;
+            ringtone = new Audio(ringtoneUrl);
+            ringtone.loop = true;
+            await ringtone.play();
+        } catch (e) {
+            console.error("Could not play ringtone:", e);
+        }
 
         connectWebSocket();
+
     } catch (err) {
-        console.error('Microphone access denied:', err);
-        // Permission denied, show helpful error in modal instead of an alert
+        console.error("Microphone access denied:", err.name);
+        
+        let instructionsKey;
+        const userAgent = navigator.userAgent.toLowerCase();
+
+        if (userAgent.includes('chrome') && !userAgent.includes('edge')) {
+            instructionsKey = 'voice.mic-denied-instructions-chrome';
+        } else if (userAgent.includes('safari') && !userAgent.includes('chrome')) {
+            instructionsKey = 'voice.mic-denied-instructions-safari';
+        } else {
+            instructionsKey = 'voice.mic-denied-instructions-generic';
+        }
+        
         updateStatus('voice.mic-permission-denied', 'fa-microphone-slash');
-        // callActive remains false, endCall button will just close the modal.
+        if (instructionsEl) {
+            instructionsEl.innerHTML = getTranslation(instructionsKey);
+            instructionsEl.classList.remove('hidden');
+        }
+
+        endCallBtn.textContent = getTranslation('voice.close-btn');
+        callActive = false; // Ensure state is correct
     }
 }
 
-function endCall(notifyServer = true) {
-    // If call was never established (e.g., mic permission denied), just close the modal.
-    if (!callActive) {
-        document.removeEventListener('keydown', handleEscapeKey);
+function endCall(userInitiated) {
+    if (userInitiated && !callActive) {
+        // This handles closing the modal after a permission error
+        modal.style.display = 'none';
         releaseFocus();
-        if (modal) modal.style.display = 'none';
+        document.removeEventListener('keydown', handleEscapeKey);
         return;
     }
 
-    // If call was active, perform full teardown.
-    callActive = false;
-    document.removeEventListener('keydown', handleEscapeKey);
+    if (!callActive) return;
 
+    if (userInitiated) {
+      updateStatus('voice.status-ended', 'fa-phone-slash');
+    }
+    
+    stopRecognition();
+    
+    if (socket && socket.readyState === WebSocket.OPEN) {
+        socket.close();
+    }
+    socket = null;
+    
+    audioQueue = [];
+    isPlaying = false;
+    
     if (ringtone) {
         ringtone.pause();
         ringtone = null;
     }
-
-    if (notifyServer && socket && socket.readyState === WebSocket.OPEN) {
-        socket.send(JSON.stringify({ type: 'end_call' }));
-        socket.close();
-    } else if (socket && (socket.readyState === WebSocket.CONNECTING || socket.readyState === WebSocket.OPEN)) {
-        socket.close();
-    }
     
-    stopRecognition();
-    audioQueue = [];
-    isPlaying = false;
-    
-    if (statusText.textContent !== getTranslation('voice.status-error')) {
-        updateStatus('voice.status-ended', 'fa-phone-slash');
-    }
-    
-    releaseFocus();
-
+    // Use a short delay before hiding the modal so the user sees the "Call Ended" message
     setTimeout(() => {
-        if (modal) modal.style.display = 'none';
-    }, 2000);
-}
-
-function updateUITexts() {
-    if (modal) {
-        modalTitle.textContent = getTranslation('voice.modal-title');
-        statusText.textContent = getTranslation(statusText.dataset.langKey || 'voice.status-initializing');
-        endCallBtn.textContent = getTranslation('voice.end-call');
-    }
+        if(modal) modal.style.display = 'none';
+        releaseFocus();
+        document.removeEventListener('keydown', handleEscapeKey);
+    }, userInitiated ? 1500 : 0);
+    
+    callActive = false;
 }
 
 export function initVoiceAssistant() {
     if (!recognitionSupported) {
-        console.warn('Speech Recognition API not supported in this browser.');
+        console.warn("Speech Recognition is not supported in this browser.");
         return;
     }
-    
+
     createVoiceModal();
-    
+
     document.body.addEventListener('click', (e) => {
         const link = e.target.closest('.phone-link');
         if (link) {
             e.preventDefault();
             phoneLinkTrigger = link;
             startCall();
-        }
-    });
-
-    window.addEventListener('languageChanged', () => {
-        updateUITexts();
-        if (recognition) {
-            const wasRunning = callActive && !isPlaying;
-            recognition.stop();
-            if (wasRunning) {
-                startRecognition();
-            }
         }
     });
 }
