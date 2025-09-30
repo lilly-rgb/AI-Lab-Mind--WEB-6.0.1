@@ -113,11 +113,9 @@ function initializeAudioDemos() {
             if (!isThisButtonPlaying) {
                 currentlyPlayingButton = button;
                 const agentName = button.dataset.play;
-                const audioFileName = agentName + (currentLang === 'en' ? '-en' : '');
                 
-                // Construct a full, unambiguous URL using the document's base URI.
-                // This is the most robust method to prevent file loading errors.
-                const audioSrc = new URL(`./assets/audio/${currentLang}/${audioFileName}.mp3`, document.baseURI).href;
+                // The language is handled by the folder path, so the filename can be simple.
+                const audioSrc = `/assets/audio/${currentLang}/${agentName}.mp3`;
                 
                 audioPlayer.src = audioSrc;
                 

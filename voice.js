@@ -210,9 +210,9 @@ async function startCall() {
         if (instructionsEl) instructionsEl.classList.add('hidden');
 
         try {
-            // Construct a full, unambiguous URL using the document's base URI.
-            // This is the most robust method to prevent file loading errors.
-            const ringtoneUrl = new URL('./assets/audio/ringtone.mp3', document.baseURI).href;
+            // Use a simple, absolute path from the root of the site.
+            // This requires the site to be hosted at the domain's root.
+            const ringtoneUrl = '/assets/audio/lofi-5s.mp3';
             ringtone = new Audio(ringtoneUrl);
             ringtone.loop = true;
             await ringtone.play();
