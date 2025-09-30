@@ -1,5 +1,3 @@
-
-
 import { getOrCreateUserId, getCookieConsent } from "./utils.js";
 import { getTranslation, currentLang } from "./language.js";
 import { trapFocus, releaseFocus } from './ui-components.js';
@@ -13,6 +11,7 @@ let isPlaying = false;
 let callActive = false;
 let modal, statusText, statusIconContainer, endCallBtn, modalTitle;
 let phoneLinkTrigger = null;
+let ringtone = null;
 
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 const recognitionSupported = !!SpeechRecognition;
@@ -105,6 +104,12 @@ function connectWebSocket() {
         try {
             const data = JSON.parse(event.data);
             if (data.type === 'assistant_audio' && data.audio) {
+                // ✅ Cortar el ringtone si sigue sonando
+                if (ringtone) {
+                    ringtone.pause();
+                    ringtone = null;
+                }
+
                 const audioBuffer = Uint8Array.from(atob(data.audio), c => c.charCodeAt(0));
                 const blob = new Blob([audioBuffer], { type: 'audio/mp3' });
                 const audioUrl = URL.createObjectURL(blob);
@@ -121,9 +126,9 @@ function connectWebSocket() {
     };
 
     socket.onclose = () => {
-        if (callActive) { // Only show ended status if call was meant to be active
-             updateStatus('voice.status-ended', 'fa-phone-slash');
-             endCall(false); 
+        if (callActive) {
+            updateStatus('voice.status-ended', 'fa-phone-slash');
+            endCall(false); 
         }
     };
 
@@ -186,13 +191,17 @@ function handleEscapeKey(event) {
 
 async function startCall() {
     if (callActive) return;
-    
-    // Set call as active immediately to ensure endCall works even if permissions/connection fail
     callActive = true; 
 
     try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        stream.getTracks().forEach(track => track.stop()); // We just need permission, not the stream itself
+        stream.getTracks().forEach(track => track.stop()); 
+
+        // 🔔 Reproducir tono de llamada (5s lo-fi)
+        ringtone = new Audio('/audio/lofi-5s.mp3');
+        ringtone.loop = false;
+        ringtone.play().catch(err => console.error("No se pudo reproducir el tono:", err));
+
         modal.style.display = 'flex';
         trapFocus(modal, phoneLinkTrigger);
         document.addEventListener('keydown', handleEscapeKey);
@@ -200,7 +209,7 @@ async function startCall() {
     } catch (err) {
         console.error('Microphone access denied:', err);
         alert(getTranslation('voice.mic-permission'));
-        endCall(false); // End call gracefully if permission is denied
+        endCall(false); 
     }
 }
 
@@ -208,6 +217,11 @@ function endCall(notifyServer = true) {
     if (!callActive) return;
     callActive = false;
     document.removeEventListener('keydown', handleEscapeKey);
+
+    if (ringtone) {
+        ringtone.pause();
+        ringtone = null;
+    }
 
     if (notifyServer && socket && socket.readyState === WebSocket.OPEN) {
         socket.send(JSON.stringify({ type: 'end_call' }));
@@ -220,7 +234,6 @@ function endCall(notifyServer = true) {
     audioQueue = [];
     isPlaying = false;
     
-    // Avoid showing "ended" if it was an immediate connection error
     if (statusText.textContent !== getTranslation('voice.status-error')) {
         updateStatus('voice.status-ended', 'fa-phone-slash');
     }
@@ -248,7 +261,6 @@ export function initVoiceAssistant() {
     
     createVoiceModal();
     
-    // Use event delegation on the document body for a more robust click handling
     document.body.addEventListener('click', (e) => {
         const link = e.target.closest('.phone-link');
         if (link) {
@@ -264,7 +276,6 @@ export function initVoiceAssistant() {
             const wasRunning = callActive && !isPlaying;
             recognition.stop();
             if (wasRunning) {
-                // Re-start with new language
                 startRecognition();
             }
         }
