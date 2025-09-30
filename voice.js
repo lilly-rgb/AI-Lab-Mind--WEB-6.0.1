@@ -4,7 +4,7 @@ import { getOrCreateUserId, getCookieConsent } from "./utils.js";
 import { getTranslation, currentLang } from "./language.js";
 import { trapFocus, releaseFocus } from './ui-components.js';
 
-const WEBSOCKET_URL = "wss://voice.ailabmind.com";
+const WEBSOCKET_URL = "wss://voice-iris-server.ailabmind.com";
 
 let socket;
 let recognition;
