@@ -237,6 +237,7 @@ export const translations = {
           'voice.status-ended': 'Llamada finalizada',
           'voice.end-call': 'Finalizar Llamada',
           'voice.mic-permission': 'Necesitamos acceso a tu micrófono para continuar. Por favor, actívalo en tu navegador.',
+          'voice.mic-permission-denied': 'Acceso denegado. Habilita el micrófono en la configuración de tu navegador para usar el asistente de voz.',
           'legal.terms-link': './assets/legal/terms-es.html',
           'legal.privacy-link': './assets/legal/privacy-es.html',
           'legal.cookies-link': './assets/legal/cookies-es.html'
@@ -476,6 +477,7 @@ export const translations = {
           'voice.status-ended': 'Call Ended',
           'voice.end-call': 'End Call',
           'voice.mic-permission': 'We need microphone access to continue. Please enable it in your browser.',
+          'voice.mic-permission-denied': 'Access denied. Please enable the microphone in your browser settings to use the voice assistant.',
           'legal.terms-link': './assets/legal/terms-en.html',
           'legal.privacy-link': './assets/legal/privacy-en.html',
           'legal.cookies-link': './assets/legal/cookies-en.html'

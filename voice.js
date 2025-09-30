@@ -104,7 +104,6 @@ function connectWebSocket() {
         try {
             const data = JSON.parse(event.data);
             if (data.type === 'assistant_audio' && data.audio) {
-                // ✅ Cortar el ringtone si sigue sonando
                 if (ringtone) {
                     ringtone.pause();
                     ringtone = null;
@@ -191,30 +190,44 @@ function handleEscapeKey(event) {
 
 async function startCall() {
     if (callActive) return;
-    callActive = true; 
+
+    // Show modal first to handle permission prompt gracefully
+    modal.style.display = 'flex';
+    trapFocus(modal, phoneLinkTrigger);
+    document.addEventListener('keydown', handleEscapeKey);
+    updateStatus('voice.status-initializing', 'fa-microphone-alt');
 
     try {
+        // Request permission
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        stream.getTracks().forEach(track => track.stop()); 
+        stream.getTracks().forEach(track => track.stop()); // Permission granted, we can stop the track.
 
-        // 🔔 Reproducir tono de llamada (5s lo-fi)
-        ringtone = new Audio('/audio/lofi-5s.mp3');
+        // Permission granted, proceed with the call
+        callActive = true; 
+
+        ringtone = new Audio('./assets/audio/lofi-5s.mp3'); // Use relative path
         ringtone.loop = false;
-        ringtone.play().catch(err => console.error("No se pudo reproducir el tono:", err));
+        ringtone.play().catch(err => console.error("Could not play ringtone:", err));
 
-        modal.style.display = 'flex';
-        trapFocus(modal, phoneLinkTrigger);
-        document.addEventListener('keydown', handleEscapeKey);
         connectWebSocket();
     } catch (err) {
         console.error('Microphone access denied:', err);
-        alert(getTranslation('voice.mic-permission'));
-        endCall(false); 
+        // Permission denied, show helpful error in modal instead of an alert
+        updateStatus('voice.mic-permission-denied', 'fa-microphone-slash');
+        // callActive remains false, endCall button will just close the modal.
     }
 }
 
 function endCall(notifyServer = true) {
-    if (!callActive) return;
+    // If call was never established (e.g., mic permission denied), just close the modal.
+    if (!callActive) {
+        document.removeEventListener('keydown', handleEscapeKey);
+        releaseFocus();
+        if (modal) modal.style.display = 'none';
+        return;
+    }
+
+    // If call was active, perform full teardown.
     callActive = false;
     document.removeEventListener('keydown', handleEscapeKey);
 
