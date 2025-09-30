@@ -193,37 +193,34 @@ function handleEscapeKey(event) {
 async function startCall() {
     if (callActive) return;
 
-    // Show modal first to handle permission prompt gracefully
-    modal.style.display = 'flex';
-    trapFocus(modal, phoneLinkTrigger);
-    document.addEventListener('keydown', handleEscapeKey);
-    updateStatus('voice.status-initializing', 'fa-microphone-alt');
-
     try {
-        // Request permission
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        stream.getTracks().forEach(track => track.stop()); // Permission granted, we can stop the track.
+        stream.getTracks().forEach(track => track.stop());
 
-        // Permission granted, proceed with the call
-        callActive = true; 
-        endCallBtn.textContent = getTranslation('voice.end-call');
-        if (instructionsEl) instructionsEl.classList.add('hidden');
+        callActive = true;
+        modal.style.display = 'flex';
+        trapFocus(modal, phoneLinkTrigger);
+        document.addEventListener('keydown', handleEscapeKey);
 
-        try {
-            // Use a simple, absolute path from the root of the site.
-            // This requires the site to be hosted at the domain's root.
-            const ringtoneUrl = '/assets/audio/lofi-5s.mp3';
-            ringtone = new Audio(ringtoneUrl);
-            ringtone.loop = true;
-            await ringtone.play();
-        } catch (e) {
-            console.error("Could not play ringtone:", e);
-        }
+        // 🔔 Reproducir tono de llamada (5s lo-fi)
+        ringtone = new Audio('/assets/audio/lofi-5s.mp3');
+        ringtone.loop = false;
+        ringtone.play().catch(err => console.error("No se pudo reproducir el tono:", err));
 
-        connectWebSocket();
+        // ⏳ esperar 5 segundos antes de iniciar WebSocket
+        setTimeout(() => {
+            if (callActive) { // Only connect if the call wasn't cancelled during the timeout
+                connectWebSocket();
+            }
+        }, 5000);
 
     } catch (err) {
-        console.error("Microphone access denied:", err.name);
+        console.error('Microphone access denied:', err);
+        
+        // Show modal to display the error
+        modal.style.display = 'flex';
+        trapFocus(modal, phoneLinkTrigger);
+        document.addEventListener('keydown', handleEscapeKey);
         
         let instructionsKey;
         const userAgent = navigator.userAgent.toLowerCase();
@@ -243,7 +240,7 @@ async function startCall() {
         }
 
         endCallBtn.textContent = getTranslation('voice.close-btn');
-        callActive = false; // Ensure state is correct
+        callActive = false; // Ensure state is correct for endCall logic
     }
 }
 
